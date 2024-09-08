@@ -1,0 +1,1328 @@
+SQL> CREATE USER SachidaPaudel_Coursework IDENTIFIED BY sachida123;
+
+User created.
+
+SQL> GRANT CONNECT, RESOURCE TO SachidaPaudel_Coursework;
+
+Grant succeeded.
+
+SQL> CONNECT SachidaPaudel_Coursework/sachida123;
+Connected.
+SQL> 
+SQL> CREATE TABLE INVOICE (
+  2       invoice_ID number PRIMARY KEY,
+  3       invoice_number VARCHAR2(10) NOT NULL,
+  4       discount_amount NUMBER(10,2),
+  5       grand_total_after_discount NUMBER(10,2) NOT NULL,
+  6       payment_method VARCHAR2(25) NOT NULL,
+  7       payment_status VARCHAR2(15) NOT NULL);
+
+Table created.
+
+SQL> 
+SQL> CREATE TABLE INVOICE (
+  2  invoice_ID INTEGER PRIMARY KEY,
+  3  invoice_number VARCHAR2(10) NOT NULL,
+  4  discount_amount NUMBER(10,2),
+  5  grand_total_after_discount NUMBER(10,2) NOT NULL,
+  6  payment_method VARCHAR2(25) NOT NULL,
+  7  payment_status VARCHAR2(15) NOT NULL
+  8  );
+
+Table created.
+
+SQL> DESCRIBE Invoice;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ INVOICE_ID                                NOT NULL NUMBER(38)
+ INVOICE_NUMBER                            NOT NULL VARCHAR2(10)
+ DISCOUNT_AMOUNT                                    NUMBER(10,2)
+ GRAND_TOTAL_AFTER_DISCOUNT                NOT NULL NUMBER(10,2)
+ PAYMENT_METHOD                            NOT NULL VARCHAR2(25)
+ PAYMENT_STATUS                            NOT NULL VARCHAR2(15)
+
+SQL> 
+SQL> CREATE TABLE VENDOR (
+  2  Vendor_ID INT PRIMARY KEY,
+  3  Vendor_name VARCHAR2(20) NOT NULL,
+  4  Vendor_address VARCHAR2(25),
+  5  Vendor_phone VARCHAR2(15) NOT NULL
+  6  );
+
+Table created.
+
+SQL> DESCRIBE Vendor;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ VENDOR_ID                                 NOT NULL NUMBER(38)
+ VENDOR_NAME                               NOT NULL VARCHAR2(20)
+ VENDOR_ADDRESS                                     VARCHAR2(25)
+ VENDOR_PHONE                              NOT NULL VARCHAR2(15)
+
+SQL> CREATE TABLE CUSTOMER_CATEGORY (
+  2      customer_category_ID INT PRIMARY KEY,
+  3      customer_type VARCHAR2(15) NOT NULL,
+  4      customer_discount_rate NUMBER(10,2) NOT NULL
+  5  );
+
+Table created.
+
+SQL> DESCRIBE Customer_category;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMER_CATEGORY_ID                      NOT NULL NUMBER(38)
+ CUSTOMER_TYPE                             NOT NULL VARCHAR2(15)
+ CUSTOMER_DISCOUNT_RATE                    NOT NULL NUMBER(10,2)
+
+SQL> 
+SQL> CREATE TABLE PRODUCT_CATEGORY (
+  2      product_category_ID INT PRIMARY KEY,
+  3      product_category_name VARCHAR2(25) NOT NULL
+  4  );
+
+Table created.
+
+SQL> DESCRIBE Product_Category;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PRODUCT_CATEGORY_ID                       NOT NULL NUMBER(38)
+ PRODUCT_CATEGORY_NAME                     NOT NULL VARCHAR2(25)
+
+SQL> 
+
+SQL> CREATE TABLE PRODUCT (
+  2  product_ID INT PRIMARY KEY,
+  3  product_name VARCHAR2(25) NOT NULL,
+  4  unit_price number(10, 2) NOT NULL,
+  5  product_availibility VARCHAR2(10),
+  6  Stock_quantity INT,
+  7  product_category_ID INT NOT NULL,
+  8  vendor_ID INT NOT NULL,
+  9  FOREIGN KEY (product_category_ID) REFERENCES PRODUCT_CATEGORY(product_category_ID),
+ 10  FOREIGN KEY (vendor_ID) REFERENCES VENDOR(vendor_ID)
+ 11  );
+
+Table created.
+
+SQL> DESCRIBE Product;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PRODUCT_ID                                NOT NULL NUMBER(38)
+ PRODUCT_NAME                              NOT NULL VARCHAR2(25)
+ UNIT_PRICE                                NOT NULL NUMBER(10,2)
+ PRODUCT_AVAILIBILITY                               VARCHAR2(10)
+ STOCK_QUANTITY                                     NUMBER(38)
+ PRODUCT_CATEGORY_ID                       NOT NULL NUMBER(38)
+ VENDOR_ID                                 NOT NULL NUMBER(38)
+
+SQL> 
+SQL> CREATE TABLE CUSTOMER (
+  2      customer_ID INT PRIMARY KEY,
+  3      first_name VARCHAR2(10) NOT NULL,
+  4      last_name VARCHAR2(15) NOT NULL,
+  5      customer_address VARCHAR2(30),
+  6      customer_phone VARCHAR2(15),
+  7      customer_category_Id INT NOT NULL,
+  8      FOREIGN KEY (customer_category_Id) REFERENCES CUSTOMER_CATEGORY(customer_category_Id)
+  9  );
+
+Table created.
+
+SQL> DESCRIBE Customer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUSTOMER_ID                               NOT NULL NUMBER(38)
+ FIRST_NAME                                NOT NULL VARCHAR2(10)
+ LAST_NAME                                 NOT NULL VARCHAR2(15)
+ CUSTOMER_ADDRESS                                   VARCHAR2(30)
+ CUSTOMER_PHONE                                     VARCHAR2(15)
+ CUSTOMER_CATEGORY_ID                      NOT NULL NUMBER(38)
+
+SQL> 
+SQL> CREATE TABLE ORDERS (
+  2       order_ID INT PRIMARY KEY,
+  3       order_date DATE NOT NULL,
+  4       order_total NUMBER(10,2) NOT NULL,
+  5       Invoice_ID INT NOT NULL,
+  6       Customer_ID INT NOT NULL,
+  7       FOREIGN KEY (Invoice_ID) REFERENCES INVOICE(Invoice_ID),
+  8       FOREIGN KEY (Customer_ID) REFERENCES CUSTOMER(customer_ID)
+  9  );
+
+Table created.
+
+SQL> DESCRIBE Orders;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ORDER_ID                                  NOT NULL NUMBER(38)
+ ORDER_DATE                                NOT NULL DATE
+ ORDER_TOTAL                               NOT NULL NUMBER(10,2)
+ INVOICE_ID                                NOT NULL NUMBER(38)
+ CUSTOMER_ID                               NOT NULL NUMBER(38)
+
+SQL> 
+SQL> CREATE TABLE ORDER_PRODUCT (
+  2      order_product_ID INT PRIMARY KEY,
+  3      order_ID INT NOT NULL,
+  4      product_Id INT NOT NULL,
+  5      order_quantity INT NOT NULL,
+  6      line_total NUMBER(10, 2) NOT NULL,
+  7      CONSTRAINT fk_order_product_order FOREIGN KEY (order_ID) REFERENCES ORDERS (order_ID),
+  8      CONSTRAINT fk_order_product_product FOREIGN KEY (product_Id) REFERENCES PRODUCT (product_Id)
+  9  );
+
+Table created.
+
+SQL> DESCRIBE Order_Product;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ORDER_PRODUCT_ID                          NOT NULL NUMBER(38)
+ ORDER_ID                                  NOT NULL NUMBER(38)
+ PRODUCT_ID                                NOT NULL NUMBER(38)
+ ORDER_QUANTITY                            NOT NULL NUMBER(38)
+ LINE_TOTAL                                NOT NULL NUMBER(10,2)
+
+SQL> 
+SQL> 
+SQL> INSERT INTO invoice (Invoice_Id, Invoice_number, discount_amount, payment_method, payment_status, grand_total_after_discount)
+  2  VALUES
+  3    (1, 'INV01', 1150.00, 'cash on delivery', 'pending', 21885.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO invoice (Invoice_Id, Invoice_number, discount_amount, payment_method, payment_status, grand_total_after_discount)
+  2  VALUES
+  3    (2, 'INV02', 3087.50, 'e wallet', 'paid', 58662.50);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO invoice (Invoice_Id, Invoice_number, discount_amount, payment_method, payment_status, grand_total_after_discount)
+  2  VALUES
+  3    (3, 'INV03', 0.00, 'debit card', 'paid', 46000.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO invoice (Invoice_Id, Invoice_number, discount_amount, payment_method, payment_status, grand_total_after_discount)
+  2  VALUES
+  3    (4, 'INV04', 62.50, 'e wallet', 'paid', 1217.50);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO invoice (Invoice_Id, Invoice_number, discount_amount, payment_method, payment_status, grand_total_after_discount)
+  2  VALUES
+  3    (5, 'INV05', 0.00, 'credit card', 'paid', 16100.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO invoice (Invoice_Id, Invoice_number, discount_amount, payment_method, payment_status, grand_total_after_discount)
+  2  VALUES
+  3    (6, 'INV06', 190.00, 'e wallet', 'paid', 1710.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO invoice (Invoice_Id, Invoice_number, discount_amount, payment_method, payment_status, grand_total_after_discount)
+  2  VALUES
+  3    (7, 'INV07', 0.00, 'cash on delivery', 'pending', 18000.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO invoice (Invoice_Id, Invoice_number, discount_amount, payment_method, payment_status, grand_total_after_discount)
+  2  VALUES
+  3    (8, 'INV08', 413.00, 'credit card', 'paid', 3717.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO invoice (Invoice_Id, Invoice_number, discount_amount, payment_method, payment_status, grand_total_after_discount)
+  2  VALUES
+  3    (9, 'INV09', 0.00, 'e wallet', 'paid', 7800.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO invoice (Invoice_Id, Invoice_number, discount_amount, payment_method, payment_status, grand_total_after_discount)
+  2  VALUES
+  3    (10, 'INV10', 17.00, 'debit card', 'paid', 323.00);
+
+1 row created.
+
+SQL> set linesize 400
+SQL> SELECT * FROM Invoice;
+
+INVOICE_ID INVOICE_NU DISCOUNT_AMOUNT GRAND_TOTAL_AFTER_DISCOUNT PAYMENT_METHOD            PAYMENT_STATUS                                                                                                                                                                                                                                                                                                       
+---------- ---------- --------------- -------------------------- ------------------------- ---------------                                                                                                                                                                                                                                                                                                      
+         1 INV01                 1150                      21885 cash on delivery          pending                                                                                                                                                                                                                                                                                                              
+         2 INV02               3087.5                    58662.5 e wallet                  paid                                                                                                                                                                                                                                                                                                                 
+         3 INV03                    0                      46000 debit card                paid                                                                                                                                                                                                                                                                                                                 
+         4 INV04                 62.5                     1217.5 e wallet                  paid                                                                                                                                                                                                                                                                                                                 
+         5 INV05                    0                      16100 credit card               paid                                                                                                                                                                                                                                                                                                                 
+         6 INV06                  190                       1710 e wallet                  paid                                                                                                                                                                                                                                                                                                                 
+         7 INV07                    0                      18000 cash on delivery          pending                                                                                                                                                                                                                                                                                                              
+         8 INV08                  413                       3717 credit card               paid                                                                                                                                                                                                                                                                                                                 
+         9 INV09                    0                       7800 e wallet                  paid                                                                                                                                                                                                                                                                                                                 
+        10 INV10                   17                        323 debit card                paid                                                                                                                                                                                                                                                                                                                 
+
+10 rows selected.
+
+SQL> 
+
+SQL> SELECT * FROM VENDOR;
+
+no rows selected
+
+SQL> 
+
+SQL> INSERT INTO Vendor (vendor_ID, vendor_name, vendor_address, vendor_phone)
+  2  VALUES (1, 'Tech Innovators Ltd', '123 main Avenue, UK', '+12 12344 11113');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Vendor (vendor_ID, vendor_name, vendor_address, vendor_phone)
+  2  VALUES (2, 'Gadget Electronics', 'BrickLane,UK', '+12 23452 12345');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Vendor (vendor_ID, vendor_name, vendor_address, vendor_phone)
+  2  VALUES (3, 'Gadget Innovators', 'Highstreet,UK', '+12 12378 89071');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Vendor (vendor_ID, vendor_name, vendor_address, vendor_phone)
+  2  VALUES (4, 'Para Emporium', 'mainstreet,Suburb', '+12 45572 98159');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Vendor (vendor_ID, vendor_name, vendor_address, vendor_phone)
+  2  VALUES (5, 'UK Electronics Ltd', 'mainroad,UK', '+12 98163 11245');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Vendor (vendor_ID, vendor_name, vendor_address, vendor_phone)
+  2  VALUES (6, 'Tech Masters Ltd', 'Lowstreet,UK', '+12 98473 78989');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Vendor (vendor_ID, vendor_name, vendor_address, vendor_phone)
+  2  VALUES (7, 'Smart Gadget Ltd', 'tecstreet,UK', '+12 34456 12390');
+
+1 row created.
+
+SQL> SELECT * FROM Vendor;
+
+ VENDOR_ID VENDOR_NAME          VENDOR_ADDRESS            VENDOR_PHONE                                                                                                                                                                                                                                                                                                                                          
+---------- -------------------- ------------------------- ---------------                                                                                                                                                                                                                                                                                                                                       
+         1 Tech Innovators Ltd  123 main Avenue, UK       +12 12344 11113                                                                                                                                                                                                                                                                                                                                       
+         2 Gadget Electronics   BrickLane,UK              +12 23452 12345                                                                                                                                                                                                                                                                                                                                       
+         3 Gadget Innovators    Highstreet,UK             +12 12378 89071                                                                                                                                                                                                                                                                                                                                       
+         4 Para Emporium        mainstreet,Suburb         +12 45572 98159                                                                                                                                                                                                                                                                                                                                       
+         5 UK Electronics Ltd   mainroad,UK               +12 98163 11245                                                                                                                                                                                                                                                                                                                                       
+         6 Tech Masters Ltd     Lowstreet,UK              +12 98473 78989                                                                                                                                                                                                                                                                                                                                       
+         7 Smart Gadget Ltd     tecstreet,UK              +12 34456 12390                                                                                                                                                                                                                                                                                                                                       
+
+7 rows selected.
+
+SQL> INSERT INTO Customer_category (customer_category_ID, customer_type, customer_discount_rate)
+  2  VALUES (1, 'Regular', 0.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Customer_category (customer_category_ID, customer_type, customer_discount_rate)
+  2  VALUES (2, 'Staff', 0.05);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Customer_category (customer_category_ID, customer_type, customer_discount_rate)
+  2  VALUES (3, 'VIP', 0.10);
+
+1 row created.
+
+SQL> SELECT * FROM Customer_Category;
+
+CUSTOMER_CATEGORY_ID CUSTOMER_TYPE   CUSTOMER_DISCOUNT_RATE                                                                                                                                                                                                                                                                                                                                                     
+-------------------- --------------- ----------------------                                                                                                                                                                                                                                                                                                                                                     
+                   1 Regular                              0                                                                                                                                                                                                                                                                                                                                                     
+                   2 Staff                              .05                                                                                                                                                                                                                                                                                                                                                     
+                   3 VIP                                 .1                                                                                                                                                                                                                                                                                                                                                     
+
+SQL> 
+SQL> INSERT INTO Product_category (Product_category_ID, Product_category_name)
+  2  VALUES (1, 'Computer');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product_category (Product_category_ID, Product_category_name)
+  2  VALUES (2, 'Gaming Accessories');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product_category (Product_category_ID, Product_category_name)
+  2  VALUES (3, 'Cables and Adapters');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product_category (Product_category_ID, Product_category_name)
+  2  VALUES (4, 'Power Bank');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product_category (Product_category_ID, Product_category_name)
+  2  VALUES (5, 'Watch Accessories');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product_category (Product_category_ID, Product_category_name)
+  2  VALUES (6, 'Mouse');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product_category (Product_category_ID, Product_category_name)
+  2  VALUES (7, 'Headphones');
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product_category (Product_category_ID, Product_category_name)
+  2  VALUES (8, 'Keyboard');
+
+1 row created.
+
+SQL> 
+SQL> SELECT * FROM Product_Category;
+
+PRODUCT_CATEGORY_ID PRODUCT_CATEGORY_NAME                                                                                                                                                                                                                                                                                                                                                                       
+------------------- -------------------------                                                                                                                                                                                                                                                                                                                                                                   
+                  1 Computer                                                                                                                                                                                                                                                                                                                                                                                    
+                  2 Gaming Accessories                                                                                                                                                                                                                                                                                                                                                                          
+                  3 Cables and Adapters                                                                                                                                                                                                                                                                                                                                                                         
+                  4 Power Bank                                                                                                                                                                                                                                                                                                                                                                                  
+                  5 Watch Accessories                                                                                                                                                                                                                                                                                                                                                                           
+                  6 Mouse                                                                                                                                                                                                                                                                                                                                                                                       
+                  7 Headphones                                                                                                                                                                                                                                                                                                                                                                                  
+                  8 Keyboard                                                                                                                                                                                                                                                                                                                                                                                    
+
+8 rows selected.
+
+SQL> 
+SQL> INSERT INTO Product (product_Id, product_name, unit_price, product_availibility, Stock_quantity, product_category_ID, vendor_Id)
+  2  VALUES (1, 'MAC', 2300.00, 'In Stock', 50, 1, 1);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product (product_Id, product_name, unit_price, product_availibility, Stock_quantity, product_category_ID, vendor_Id)
+  2  VALUES (2, 'Gaming Monitor', 9900.00, 'In Stock', 700, 2, 2);
+
+1 row created.
+
+SQL> INSERT INTO Product (product_Id, product_name, unit_price, product_availibility, Stock_quantity, product_category_ID, vendor_Id)
+  2  VALUES (3, 'Wireless Charger', 490.00, 'In Stock', 220, 3, 1);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product (product_Id, product_name, unit_price, product_availibility, Stock_quantity, product_category_ID, vendor_Id)
+  2  VALUES (4, 'Samsung Power Banks', 590.00, 'In Stock', 80, 4, 1);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product (product_Id, product_name, unit_price, product_availibility, Stock_quantity, product_category_ID, vendor_Id)
+  2  VALUES (5, 'Watch Bands', 290.00, 'In Stock', 20, 5, 3);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product (product_Id, product_name, unit_price, product_availibility, Stock_quantity, product_category_ID, vendor_Id)
+  2  VALUES (6, 'Gaming Mouse', 190.00, 'In Stock', 30, 6, 1);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product (product_Id, product_name, unit_price, product_availibility, Stock_quantity, product_category_ID, vendor_Id)
+  2  VALUES (7, 'Bluethoot Head Phones', 1200.00, 'In Stock', 50, 7, 7);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product (product_Id, product_name, unit_price, product_availibility, Stock_quantity, product_category_ID, vendor_Id)
+  2  VALUES (8, 'Wireless Keyboard', 900.00, 'In Stock', 60, 8, 4);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product (product_Id, product_name, unit_price, product_availibility, Stock_quantity, product_category_ID, vendor_Id)
+  2  VALUES (9, 'LG Samsung TV', 3900.00, 'In Stock', 75, 6, 6);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Product (product_Id, product_name, unit_price, product_availibility, Stock_quantity, product_category_ID, vendor_Id)
+  2  VALUES (10, 'HD Webcam', 340.00, 'In Stock', 1, 5, 5);
+
+1 row created.
+
+SQL> 
+SQL> SELECT * FROM Product;
+
+PRODUCT_ID PRODUCT_NAME              UNIT_PRICE PRODUCT_AV STOCK_QUANTITY PRODUCT_CATEGORY_ID  VENDOR_ID                                                                                                                                                                                                                                                                                                        
+---------- ------------------------- ---------- ---------- -------------- ------------------- ----------                                                                                                                                                                                                                                                                                                        
+         1 MAC                             2300 In Stock               50                   1          1                                                                                                                                                                                                                                                                                                        
+         2 Gaming Monitor                  9900 In Stock              700                   2          2                                                                                                                                                                                                                                                                                                        
+         3 Wireless Charger                 490 In Stock              220                   3          1                                                                                                                                                                                                                                                                                                        
+         4 Samsung Power Banks              590 In Stock               80                   4          1                                                                                                                                                                                                                                                                                                        
+         5 Watch Bands                      290 In Stock               20                   5          3                                                                                                                                                                                                                                                                                                        
+         6 Gaming Mouse                     190 In Stock               30                   6          1                                                                                                                                                                                                                                                                                                        
+         7 Bluethoot Head Phones           1200 In Stock               50                   7          7                                                                                                                                                                                                                                                                                                        
+         8 Wireless Keyboard                900 In Stock               60                   8          4                                                                                                                                                                                                                                                                                                        
+         9 LG Samsung TV                   3900 In Stock               75                   6          6                                                                                                                                                                                                                                                                                                        
+        10 HD Webcam                        340 In Stock                1                   5          5                                                                                                                                                                                                                                                                                                        
+
+10 rows selected.
+
+SQL> 
+SQL> INSERT INTO Customer (customer_ID, First_name, Last_name, customer_address, customer_phone, customer_category_Id)
+  2  VALUES (1, 'Harry', 'Brown', 'pine road, 211 street', '+11 3456778', 1);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Customer (customer_ID, First_name, Last_name, customer_address, customer_phone, customer_category_Id)
+  2  VALUES (2, 'James', 'Smith', '102 tech street, Liverpool', '+11 1234567', 2);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Customer (customer_ID, First_name, Last_name, customer_address, customer_phone, customer_category_Id)
+  2  VALUES (3, 'Alan', 'Doe', '101 Wireless Street, Glasgow', '+11 87497586', 3);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Customer (customer_ID, First_name, Last_name, customer_address, customer_phone, customer_category_Id)
+  2  VALUES (4, 'Anderson', 'Charter', '111 willow street, UK', '+11 74573536', 1);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Customer (customer_ID, First_name, Last_name, customer_address, customer_phone, customer_category_Id)
+  2  VALUES (5, 'Neil', 'Armstrong', '33 main road, London', '+11 45673839', 2);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Customer (customer_ID, First_name, Last_name, customer_address, customer_phone, customer_category_Id)
+  2  VALUES (6, 'Carie', 'Christin', '22 oak street, Manchester', '+11 64654836', 3);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Customer (customer_ID, First_name, Last_name, customer_address, customer_phone, customer_category_Id)
+  2  VALUES (7, 'Alex', 'Miller', '111 high street, Birmingham', '+11 76474649', 1);
+
+1 row created.
+
+SQL> 
+SQL> SELECT * FROM Customer;
+
+CUSTOMER_ID FIRST_NAME LAST_NAME       CUSTOMER_ADDRESS               CUSTOMER_PHONE  CUSTOMER_CATEGORY_ID                                                                                                                                                                                                                                                                                                      
+----------- ---------- --------------- ------------------------------ --------------- --------------------                                                                                                                                                                                                                                                                                                      
+          1 Harry      Brown           pine road, 211 street          +11 3456778                        1                                                                                                                                                                                                                                                                                                      
+          2 James      Smith           102 tech street, Liverpool     +11 1234567                        2                                                                                                                                                                                                                                                                                                      
+          3 Alan       Doe             101 Wireless Street, Glasgow   +11 87497586                       3                                                                                                                                                                                                                                                                                                      
+          4 Anderson   Charter         111 willow street, UK          +11 74573536                       1                                                                                                                                                                                                                                                                                                      
+          5 Neil       Armstrong       33 main road, London           +11 45673839                       2                                                                                                                                                                                                                                                                                                      
+          6 Carie      Christin        22 oak street, Manchester      +11 64654836                       3                                                                                                                                                                                                                                                                                                      
+          7 Alex       Miller          111 high street, Birmingham    +11 76474649                       1                                                                                                                                                                                                                                                                                                      
+
+7 rows selected.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (1, TO_DATE('2023-04-10', 'YYYY-MM-DD'), 23,000.00, 1, 5);
+INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+            *
+ERROR at line 1:
+ORA-00913: too many values 
+
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (2, TO_DATE('2023-05-01', 'YYYY-MM-DD'), 61,750.00, 2, 2);
+INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+            *
+ERROR at line 1:
+ORA-00913: too many values 
+
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (3, TO_DATE('2023-05-10', 'YYYY-MM-DD'), 46,000.00, 3, 4);
+INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+            *
+ERROR at line 1:
+ORA-00913: too many values 
+
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (4, TO_DATE('2023-05-15', 'YYYY-MM-DD'), 1,280.00, 4, 5);
+INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+            *
+ERROR at line 1:
+ORA-00913: too many values 
+
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (5, TO_DATE('2023-05-25', 'YYYY-MM-DD'), 16,100.00, 5, 7);
+INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+            *
+ERROR at line 1:
+ORA-00913: too many values 
+
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (6, TO_DATE('2023-05-28', 'YYYY-MM-DD'), 1,900.00, 6, 6);
+INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+            *
+ERROR at line 1:
+ORA-00913: too many values 
+
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (7, TO_DATE('2023-08-22', 'YYYY-MM-DD'), 18,000.00, 7, 1);
+INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+            *
+ERROR at line 1:
+ORA-00913: too many values 
+
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (8, TO_DATE('2023-08-23', 'YYYY-MM-DD'), 4,130.00, 8, 3);
+INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+            *
+ERROR at line 1:
+ORA-00913: too many values 
+
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (9, TO_DATE('2023-08-24', 'YYYY-MM-DD'), 7,800.00, 9, 1);
+INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+            *
+ERROR at line 1:
+ORA-00913: too many values 
+
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (10, TO_DATE('2023-06-10', 'YYYY-MM-DD'), 340.00, 10, 2);
+
+1 row created.
+
+SQL> DELETE FROM Orders
+  2  WHERE order_ID = 10
+  3    AND order_date = TO_DATE('2023-06-10', 'YYYY-MM-DD')
+  4    AND order_total = 340.00
+  5    AND Invoice_ID = 10
+  6    AND Customer_ID = 2;
+
+1 row deleted.
+
+SQL> 
+SQL> -- Inserting values into ORDERS table
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (1, TO_DATE('2023-04-10', 'YYYY-MM-DD'), 23000.00, 1, 5);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (2, TO_DATE('2023-05-01', 'YYYY-MM-DD'), 61750.00, 2, 2);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (3, TO_DATE('2023-05-10', 'YYYY-MM-DD'), 46000.00, 3, 4);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (4, TO_DATE('2023-05-15', 'YYYY-MM-DD'), 1280.00, 4, 5);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (5, TO_DATE('2023-05-25', 'YYYY-MM-DD'), 16100.00, 5, 7);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (6, TO_DATE('2023-05-21', 'YYYY-MM-DD'), 12000.00, 6, 6);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (7, TO_DATE('2023-05-22', 'YYYY-MM-DD'), 18000.00, 7, 1);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (8, TO_DATE('2023-05-23', 'YYYY-MM-DD'), 4130.00, 8, 3);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (9, TO_DATE('2023-05-24', 'YYYY-MM-DD'), 7800.00, 9, 1);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (10, TO_DATE('2023-08-10', 'YYYY-MM-DD'), 340.00, 10, 2);
+
+1 row created.
+
+SQL> DELETE FROM Orders
+  2  WHERE order_ID = 10;
+
+1 row deleted.
+
+SQL> DELETE FROM Orders
+  2  WHERE order_ID = 1;
+
+1 row deleted.
+
+SQL> DELETE FROM Orders
+  2  WHERE order_ID = 2;
+
+1 row deleted.
+
+SQL> DELETE FROM Orders
+  2  WHERE order_ID = 3;
+
+1 row deleted.
+
+SQL> DELETE FROM Orders
+  2  WHERE order_ID = 4;
+
+1 row deleted.
+
+SQL> DELETE FROM Orders
+  2  WHERE order_ID = 5;
+
+1 row deleted.
+
+SQL> DELETE FROM Orders
+  2  WHERE order_ID = 6;
+
+1 row deleted.
+
+SQL> DELETE FROM Orders
+  2  WHERE order_ID = 7;
+
+1 row deleted.
+
+SQL> DELETE FROM Orders
+  2  WHERE order_ID = 8;
+
+1 row deleted.
+
+SQL> DELETE FROM Orders
+  2  WHERE order_ID = 9;
+
+1 row deleted.
+
+SQL> SELECT * FROM Orders;
+
+no rows selected
+
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (1, TO_DATE('2023-04-10', 'YYYY-MM-DD'), 23000.00, 1, 5);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (2, TO_DATE('2023-05-01', 'YYYY-MM-DD'), 61750.00, 2, 2);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (3, TO_DATE('2023-05-10', 'YYYY-MM-DD'), 46000.00, 3, 4);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (4, TO_DATE('2023-05-15', 'YYYY-MM-DD'), 1280.00, 4, 5);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (5, TO_DATE('2023-05-25', 'YYYY-MM-DD'), 16100.00, 5, 7);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (6, TO_DATE('2023-05-28', 'YYYY-MM-DD'), 12000.00, 6, 6);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (7, TO_DATE('2023-08-22', 'YYYY-MM-DD'), 18000.00, 7, 1);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (8, TO_DATE('2023-05-23', 'YYYY-MM-DD'), 4130.00, 8, 3);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (9, TO_DATE('2023-05-24', 'YYYY-MM-DD'), 7800.00, 9, 1);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO Orders (order_ID, order_date, order_total, Invoice_ID, Customer_ID)
+  2  VALUES (10, TO_DATE('2023-08-10', 'YYYY-MM-DD'), 340.00, 10, 2);
+
+1 row created.
+
+SQL> SELECT * FROM Orders;
+
+  ORDER_ID ORDER_DAT ORDER_TOTAL INVOICE_ID CUSTOMER_ID                                                                                                                                                                                                                                                                                                                                                         
+---------- --------- ----------- ---------- -----------                                                                                                                                                                                                                                                                                                                                                         
+         1 10-APR-23       23000          1           5                                                                                                                                                                                                                                                                                                                                                         
+         2 01-MAY-23       61750          2           2                                                                                                                                                                                                                                                                                                                                                         
+         3 10-MAY-23       46000          3           4                                                                                                                                                                                                                                                                                                                                                         
+         4 15-MAY-23        1280          4           5                                                                                                                                                                                                                                                                                                                                                         
+         5 25-MAY-23       16100          5           7                                                                                                                                                                                                                                                                                                                                                         
+         6 28-MAY-23       12000          6           6                                                                                                                                                                                                                                                                                                                                                         
+         7 22-AUG-23       18000          7           1                                                                                                                                                                                                                                                                                                                                                         
+         8 23-MAY-23        4130          8           3                                                                                                                                                                                                                                                                                                                                                         
+         9 24-MAY-23        7800          9           1                                                                                                                                                                                                                                                                                                                                                         
+        10 10-AUG-23         340         10           2                                                                                                                                                                                                                                                                                                                                                         
+
+10 rows selected.
+
+SQL> 
+SQL> INSERT INTO order_product (order_product_ID, order_ID, product_Id, order_quantity, line_total)
+  2  VALUES (1, 1, 1, 10, 23000.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO order_product (order_product_ID, order_ID, product_Id, order_quantity, line_total)
+  2  VALUES (2, 2, 2, 5, 49500.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO order_product (order_product_ID, order_ID, product_Id, order_quantity, line_total)
+  2  VALUES (3, 2, 3, 25, 12250.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO order_product (order_product_ID, order_ID, product_Id, order_quantity, line_total)
+  2  VALUES (4, 3, 1, 20, 46000.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO order_product (order_product_ID, order_ID, product_Id, order_quantity, line_total)
+  2  VALUES (5, 4, 5, 1, 290.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO order_product (order_product_ID, order_ID, product_Id, order_quantity, line_total)
+  2  VALUES (6, 5, 1, 7, 16100.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO order_product (order_product_ID, order_ID, product_Id, order_quantity, line_total)
+  2  VALUES (7, 6, 6, 10, 1900.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO order_product (order_product_ID, order_ID, product_Id, order_quantity, line_total)
+  2  VALUES (8, 7, 7, 15, 18000.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO order_product (order_product_ID, order_ID, product_Id, order_quantity, line_total)
+  2  VALUES (9, 8, 4, 7, 4130.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO order_product (order_product_ID, order_ID, product_Id, order_quantity, line_total)
+  2  VALUES (10, 4, 8, 1, 990.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO order_product (order_product_ID, order_ID, product_Id, order_quantity, line_total)
+  2  VALUES (11, 9, 9, 2, 7800.00);
+
+1 row created.
+
+SQL> 
+SQL> INSERT INTO order_product (order_product_ID, order_ID, product_Id, order_quantity, line_total)
+  2  VALUES (12, 10, 10, 1, 340.00);
+
+1 row created.
+
+SQL> 
+SQL> SELECT * FROM Order_Product;
+
+ORDER_PRODUCT_ID   ORDER_ID PRODUCT_ID ORDER_QUANTITY LINE_TOTAL                                                                                                                                                                                                                                                                                                                                                
+---------------- ---------- ---------- -------------- ----------                                                                                                                                                                                                                                                                                                                                                
+               1          1          1             10      23000                                                                                                                                                                                                                                                                                                                                                
+               2          2          2              5      49500                                                                                                                                                                                                                                                                                                                                                
+               3          2          3             25      12250                                                                                                                                                                                                                                                                                                                                                
+               4          3          1             20      46000                                                                                                                                                                                                                                                                                                                                                
+               5          4          5              1        290                                                                                                                                                                                                                                                                                                                                                
+               6          5          1              7      16100                                                                                                                                                                                                                                                                                                                                                
+               7          6          6             10       1900                                                                                                                                                                                                                                                                                                                                                
+               8          7          7             15      18000                                                                                                                                                                                                                                                                                                                                                
+               9          8          4              7       4130                                                                                                                                                                                                                                                                                                                                                
+              10          4          8              1        990                                                                                                                                                                                                                                                                                                                                                
+              11          9          9              2       7800                                                                                                                                                                                                                                                                                                                                                
+
+ORDER_PRODUCT_ID   ORDER_ID PRODUCT_ID ORDER_QUANTITY LINE_TOTAL                                                                                                                                                                                                                                                                                                                                                
+---------------- ---------- ---------- -------------- ----------                                                                                                                                                                                                                                                                                                                                                
+              12         10         10              1        340                                                                                                                                                                                                                                                                                                                                                
+
+12 rows selected.
+
+SQL> set linesize600
+SQL> SELECT * FROM Order_Product;
+
+ORDER_PRODUCT_ID   ORDER_ID PRODUCT_ID ORDER_QUANTITY LINE_TOTAL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+---------------- ---------- ---------- -------------- ----------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               1          1          1             10      23000                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               2          2          2              5      49500                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               3          2          3             25      12250                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               4          3          1             20      46000                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               5          4          5              1        290                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               6          5          1              7      16100                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               7          6          6             10       1900                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               8          7          7             15      18000                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               9          8          4              7       4130                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+              10          4          8              1        990                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+              11          9          9              2       7800                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+ORDER_PRODUCT_ID   ORDER_ID PRODUCT_ID ORDER_QUANTITY LINE_TOTAL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+---------------- ---------- ---------- -------------- ----------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+              12         10         10              1        340                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+12 rows selected.
+
+SQL> set linesize 800
+SQL> SELECT * FROM Order_Product;
+
+ORDER_PRODUCT_ID   ORDER_ID PRODUCT_ID ORDER_QUANTITY LINE_TOTAL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+---------------- ---------- ---------- -------------- ----------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+               1          1          1             10      23000                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+               2          2          2              5      49500                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+               3          2          3             25      12250                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+               4          3          1             20      46000                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+               5          4          5              1        290                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+               6          5          1              7      16100                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+               7          6          6             10       1900                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+               8          7          7             15      18000                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+               9          8          4              7       4130                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+              10          4          8              1        990                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+              11          9          9              2       7800                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+ORDER_PRODUCT_ID   ORDER_ID PRODUCT_ID ORDER_QUANTITY LINE_TOTAL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+---------------- ---------- ---------- -------------- ----------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+              12         10         10              1        340                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+12 rows selected.
+
+SQL> set linesize 1000
+SQL> SELECT * FROM Order_Product;
+
+ORDER_PRODUCT_ID   ORDER_ID PRODUCT_ID ORDER_QUANTITY LINE_TOTAL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+---------------- ---------- ---------- -------------- ----------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               1          1          1             10      23000                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               2          2          2              5      49500                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               3          2          3             25      12250                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               4          3          1             20      46000                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               5          4          5              1        290                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               6          5          1              7      16100                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               7          6          6             10       1900                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               8          7          7             15      18000                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+               9          8          4              7       4130                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+              10          4          8              1        990                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+              11          9          9              2       7800                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+ORDER_PRODUCT_ID   ORDER_ID PRODUCT_ID ORDER_QUANTITY LINE_TOTAL                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+---------------- ---------- ---------- -------------- ----------                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+              12         10         10              1        340                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+
+12 rows selected.
+
+SQL> 
+SQL> set linesize 400
+SQL>      SELECT
+  2           C.customer_ID,
+  3           C.first_name,
+  4           C.last_name,
+  5           C.customer_address,
+  6           C.customer_phone,
+  7           CC.customer_type
+  8       FROM
+  9           CUSTOMER C
+ 10       JOIN
+ 11           CUSTOMER_CATEGORY CC ON C.customer_category_ID = CC.customer_category_ID
+ 12       WHERE
+ 13           CC.customer_type = 'Staff';
+
+CUSTOMER_ID FIRST_NAME LAST_NAME       CUSTOMER_ADDRESS               CUSTOMER_PHONE  CUSTOMER_TYPE                                                                                                                                                                                                                                                                                                             
+----------- ---------- --------------- ------------------------------ --------------- ---------------                                                                                                                                                                                                                                                                                                           
+          2 James      Smith           102 tech street, Liverpool     +11 1234567     Staff                                                                                                                                                                                                                                                                                                                     
+          5 Neil       Armstrong       33 main road, London           +11 45673839    Staff                                                                                                                                                                                                                                                                                                                     
+
+SQL> 
+SQL>  SELECT
+  2           O.order_ID,
+  3           O.order_date,
+  4           OP.product_Id,
+  5           P.product_name,
+  6           OP.order_quantity,
+  7           OP.line_total
+  8       FROM
+  9           ORDERS O
+ 10       JOIN
+ 11           ORDER_PRODUCT OP ON O.order_ID = OP.order_ID
+ 12       JOIN
+ 13           PRODUCT P ON OP.product_Id = P.product_Id
+ 14       WHERE
+ 15           O.order_date BETWEEN TO_DATE('2023-05-01', 'YYYY-MM-DD') AND TO_DATE('2023-05-28', 'YYYY-MM-DD')
+ 16           AND P.product_name = 'MAC';
+
+  ORDER_ID ORDER_DAT PRODUCT_ID PRODUCT_NAME              ORDER_QUANTITY LINE_TOTAL                                                                                                                                                                                                                                                                                                                             
+---------- --------- ---------- ------------------------- -------------- ----------                                                                                                                                                                                                                                                                                                                             
+         3 10-MAY-23          1 MAC                                   20      46000                                                                                                                                                                                                                                                                                                                             
+         5 25-MAY-23          1 MAC                                    7      16100                                                                                                                                                                                                                                                                                                                             
+
+SQL> 
+SQL>  SELECT
+  2           O.order_ID,
+  3           O.order_date,
+  4  	 O.order_total,
+  5           OP.product_Id,
+  6           P.product_name,
+  7           OP.order_quantity,
+  8           OP.line_total
+  9       FROM
+ 10           ORDERS O
+ 11       JOIN
+ 12           ORDER_PRODUCT OP ON O.order_ID = OP.order_ID
+ 13       JOIN
+ 14           PRODUCT P ON OP.product_Id = P.product_Id
+ 15       WHERE
+ 16           O.order_date BETWEEN TO_DATE('2023-05-01', 'YYYY-MM-DD') AND TO_DATE('2023-05-28', 'YYYY-MM-DD')
+ 17           AND P.product_name = 'MAC';
+
+  ORDER_ID ORDER_DAT ORDER_TOTAL PRODUCT_ID PRODUCT_NAME              ORDER_QUANTITY LINE_TOTAL                                                                                                                                                                                                                                                                                                                 
+---------- --------- ----------- ---------- ------------------------- -------------- ----------                                                                                                                                                                                                                                                                                                                 
+         3 10-MAY-23       46000          1 MAC                                   20      46000                                                                                                                                                                                                                                                                                                                 
+         5 25-MAY-23       16100          1 MAC                                    7      16100                                                                                                                                                                                                                                                                                                                 
+
+SQL> 
+
+SQL> INSERT INTO Customer (customer_ID, First_name, Last_name, customer_address, customer_phone, customer_category_Id)
+  2  VALUES (11, 'John', 'Doe', '123 Main Street', '+11 9876543', 1);
+
+1 row created.
+
+SQL> SELECT * FROM Customer;
+
+CUSTOMER_ID FIRST_NAME LAST_NAME       CUSTOMER_ADDRESS               CUSTOMER_PHONE  CUSTOMER_CATEGORY_ID                                                                                                                                                                                                                                                                                                      
+----------- ---------- --------------- ------------------------------ --------------- --------------------                                                                                                                                                                                                                                                                                                      
+          1 Harry      Brown           pine road, 211 street          +11 3456778                        1                                                                                                                                                                                                                                                                                                      
+          2 James      Smith           102 tech street, Liverpool     +11 1234567                        2                                                                                                                                                                                                                                                                                                      
+          3 Alan       Doe             101 Wireless Street, Glasgow   +11 87497586                       3                                                                                                                                                                                                                                                                                                      
+          4 Anderson   Charter         111 willow street, UK          +11 74573536                       1                                                                                                                                                                                                                                                                                                      
+          5 Neil       Armstrong       33 main road, London           +11 45673839                       2                                                                                                                                                                                                                                                                                                      
+          6 Carie      Christin        22 oak street, Manchester      +11 64654836                       3                                                                                                                                                                                                                                                                                                      
+          7 Alex       Miller          111 high street, Birmingham    +11 76474649                       1                                                                                                                                                                                                                                                                                                      
+         11 John       Doe             123 Main Street                +11 9876543                        1                                                                                                                                                                                                                                                                                                      
+
+8 rows selected.
+
+SQL> 
+SQL>   SELECT
+  2           C.customer_ID,
+  3           C.First_name,
+  4           C.Last_name,
+  5           O.order_ID,
+  6           O.order_date,
+  7           O.order_total
+  8       FROM
+  9           CUSTOMER C
+ 10       LEFT JOIN
+ 11           ORDERS O ON C.customer_ID = O.customer_ID;
+
+CUSTOMER_ID FIRST_NAME LAST_NAME         ORDER_ID ORDER_DAT ORDER_TOTAL                                                                                                                                                                                                                                                                                                                                         
+----------- ---------- --------------- ---------- --------- -----------                                                                                                                                                                                                                                                                                                                                         
+          1 Harry      Brown                    9 24-MAY-23        7800                                                                                                                                                                                                                                                                                                                                         
+          1 Harry      Brown                    7 22-AUG-23       18000                                                                                                                                                                                                                                                                                                                                         
+          2 James      Smith                    2 01-MAY-23       61750                                                                                                                                                                                                                                                                                                                                         
+          2 James      Smith                   10 10-AUG-23         340                                                                                                                                                                                                                                                                                                                                         
+          3 Alan       Doe                      8 23-MAY-23        4130                                                                                                                                                                                                                                                                                                                                         
+          4 Anderson   Charter                  3 10-MAY-23       46000                                                                                                                                                                                                                                                                                                                                         
+          5 Neil       Armstrong                1 10-APR-23       23000                                                                                                                                                                                                                                                                                                                                         
+          5 Neil       Armstrong                4 15-MAY-23        1280                                                                                                                                                                                                                                                                                                                                         
+          6 Carie      Christin                 6 28-MAY-23       12000                                                                                                                                                                                                                                                                                                                                         
+          7 Alex       Miller                   5 25-MAY-23       16100                                                                                                                                                                                                                                                                                                                                         
+         11 John       Doe                                                                                                                                                                                                                                                                                                                                                                                      
+
+11 rows selected.
+
+SQL> 
+
+SQL> SELECT *
+  2  FROM Product
+  3  WHERE product_name LIKE '_a%' AND Stock_quantity > 50;
+
+PRODUCT_ID PRODUCT_NAME              UNIT_PRICE PRODUCT_AV STOCK_QUANTITY PRODUCT_CATEGORY_ID  VENDOR_ID                                                                                                                                                                                                                                                                                                        
+---------- ------------------------- ---------- ---------- -------------- ------------------- ----------                                                                                                                                                                                                                                                                                                        
+         2 Gaming Monitor                  9900 In Stock              700                   2          2                                                                                                                                                                                                                                                                                                        
+         4 Samsung Power Banks              590 In Stock               80                   4          1                                                                                                                                                                                                                                                                                                        
+
+SQL> 
+
+SQL> SELECT C.customer_ID, C.First_name, C.Last_name, O.order_date
+  2  FROM Customer C
+  3  JOIN Orders O ON C.customer_ID = O.Customer_ID
+  4  ORDER BY O.order_date DESC;
+
+CUSTOMER_ID FIRST_NAME LAST_NAME       ORDER_DAT                                                                                                                                                                                                                                                                                                                                                                
+----------- ---------- --------------- ---------                                                                                                                                                                                                                                                                                                                                                                
+          1 Harry      Brown           22-AUG-23                                                                                                                                                                                                                                                                                                                                                                
+          2 James      Smith           10-AUG-23                                                                                                                                                                                                                                                                                                                                                                
+          6 Carie      Christin        28-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          7 Alex       Miller          25-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          1 Harry      Brown           24-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          3 Alan       Doe             23-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          5 Neil       Armstrong       15-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          4 Anderson   Charter         10-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          2 James      Smith           01-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          5 Neil       Armstrong       10-APR-23                                                                                                                                                                                                                                                                                                                                                                
+
+10 rows selected.
+
+SQL> SELECT C.customer_ID, C.First_name, C.Last_name, O.order_date
+  2  FROM Customer C
+  3  JOIN Orders O ON C.customer_ID = O.Customer_ID
+  4  ORDER BY O.order_date DESC;
+
+CUSTOMER_ID FIRST_NAME LAST_NAME       ORDER_DAT                                                                                                                                                                                                                                                                                                                                                                
+----------- ---------- --------------- ---------                                                                                                                                                                                                                                                                                                                                                                
+          1 Harry      Brown           22-AUG-23                                                                                                                                                                                                                                                                                                                                                                
+          2 James      Smith           10-AUG-23                                                                                                                                                                                                                                                                                                                                                                
+          6 Carie      Christin        28-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          7 Alex       Miller          25-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          1 Harry      Brown           24-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          3 Alan       Doe             23-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          5 Neil       Armstrong       15-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          4 Anderson   Charter         10-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          2 James      Smith           01-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          5 Neil       Armstrong       10-APR-23                                                                                                                                                                                                                                                                                                                                                                
+
+10 rows selected.
+
+SQL> SELECT C.customer_ID, C.First_name, C.Last_name, O.order_date
+  2  FROM Customer C
+  3  JOIN Orders O ON C.customer_ID = O.Customer_ID
+  4  ORDER BY O.order_date DESC;
+
+CUSTOMER_ID FIRST_NAME LAST_NAME       ORDER_DAT                                                                                                                                                                                                                                                                                                                                                                
+----------- ---------- --------------- ---------                                                                                                                                                                                                                                                                                                                                                                
+          1 Harry      Brown           22-AUG-23                                                                                                                                                                                                                                                                                                                                                                
+          2 James      Smith           10-AUG-23                                                                                                                                                                                                                                                                                                                                                                
+          6 Carie      Christin        28-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          7 Alex       Miller          25-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          1 Harry      Brown           24-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          3 Alan       Doe             23-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          5 Neil       Armstrong       15-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          4 Anderson   Charter         10-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          2 James      Smith           01-MAY-23                                                                                                                                                                                                                                                                                                                                                                
+          5 Neil       Armstrong       10-APR-23                                                                                                                                                                                                                                                                                                                                                                
+
+10 rows selected.
+
+SQL> 
+
+SQL> SELECT customer_ID, First_name, Last_name, order_date
+  2  FROM (
+  3      SELECT C.customer_ID, C.First_name, C.Last_name, O.order_date
+  4      FROM Customer C
+  5      JOIN Orders O ON C.customer_ID = O.Customer_ID
+  6      ORDER BY O.order_date DESC
+  7  )
+  8  WHERE ROWNUM = 1;
+
+CUSTOMER_ID FIRST_NAME LAST_NAME       ORDER_DAT                                                                                                                                                                                                                                                                                                                                                                
+----------- ---------- --------------- ---------                                                                                                                                                                                                                                                                                                                                                                
+          1 Harry      Brown           22-AUG-23                                                                                                                                                                                                                                                                                                                                                                
+
+SQL> 
+SQL> SELECT EXTRACT(MONTH FROM order_date) AS month,
+  2         EXTRACT(YEAR FROM order_date) AS year,
+  3         SUM(order_total) AS total_revenue
+  4  FROM Orders
+  5  GROUP BY EXTRACT(MONTH FROM order_date), EXTRACT(YEAR FROM order_date)
+  6  ORDER BY EXTRACT(YEAR FROM order_date), EXTRACT(MONTH FROM order_date);
+
+     MONTH       YEAR TOTAL_REVENUE                                                                                                                                                                                                                                                                                                                                                                             
+---------- ---------- -------------                                                                                                                                                                                                                                                                                                                                                                             
+         4       2023         23000                                                                                                                                                                                                                                                                                                                                                                             
+         5       2023        149060                                                                                                                                                                                                                                                                                                                                                                             
+         8       2023         18340                                                                                                                                                                                                                                                                                                                                                                             
+
+SQL> 
+SQL> SELECT order_ID, order_date, order_total
+  2  FROM Orders O
+  3  WHERE order_total >= (SELECT AVG(order_total) FROM Orders);
+
+  ORDER_ID ORDER_DAT ORDER_TOTAL                                                                                                                                                                                                                                                                                                                                                                                
+---------- --------- -----------                                                                                                                                                                                                                                                                                                                                                                                
+         1 10-APR-23       23000                                                                                                                                                                                                                                                                                                                                                                                
+         2 01-MAY-23       61750                                                                                                                                                                                                                                                                                                                                                                                
+         3 10-MAY-23       46000                                                                                                                                                                                                                                                                                                                                                                                
+
+SQL> 
+
+SQL> SELECT vendor_ID, vendor_name, vendor_address, vendor_phone
+  2  FROM Vendor V
+  3  WHERE EXISTS (
+  4      SELECT 1
+  5      FROM Product P
+  6      WHERE P.vendor_ID = V.vendor_ID
+  7      HAVING COUNT(P.product_ID) > 3
+  8  );
+
+ VENDOR_ID VENDOR_NAME          VENDOR_ADDRESS            VENDOR_PHONE                                                                                                                                                                                                                                                                                                                                          
+---------- -------------------- ------------------------- ---------------                                                                                                                                                                                                                                                                                                                                       
+         1 Tech Innovators Ltd  123 main Avenue, UK       +12 12344 11113                                                                                                                                                                                                                                                                                                                                       
+
+
+SQL>      SELECT * FROM (
+  2           SELECT P.product_ID, P.product_name, P.unit_price, P.stock_quantity, P.vendor_ID, COUNT(OP.order_product_ID) AS count_Orders
+  3           FROM Product P
+  4           JOIN Order_Product OP ON P.product_ID = OP.product_ID
+  5           GROUP BY P.product_ID, P.product_name, P.unit_price, P.stock_quantity, P.vendor_ID
+  6          ORDER BY count_Orders DESC
+  7       ) WHERE ROWNUM <= 3;
+
+PRODUCT_ID PRODUCT_NAME              UNIT_PRICE STOCK_QUANTITY  VENDOR_ID COUNT_ORDERS                                                                                                                                                                                                                                                                                                                          
+---------- ------------------------- ---------- -------------- ---------- ------------                                                                                                                                                                                                                                                                                                                          
+         1 MAC                             2300             50          1            3                                                                                                                                                                                                                                                                                                                          
+         7 Bluethoot Head Phones           1200             50          7            1                                                                                                                                                                                                                                                                                                                          
+         2 Gaming Monitor                  9900            700          2            1                                                                                                                                                                                                                                                                                                                          
+
+ 
+SQL> 
+SQL>      SELECT
+  2           C.customer_ID,
+  3           C.First_name,
+  4           C.Last_name,
+  5           SUM(O.order_total) AS total_spend_amount
+  6       FROM
+  7           Customer C
+  8       JOIN
+  9           Orders O ON C.customer_ID = O.customer_ID
+ 10       WHERE
+ 11           EXTRACT(MONTH FROM O.order_date) = 8
+ 12       GROUP BY
+ 13           C.customer_ID,
+ 14           C.First_name,
+ 15           C.Last_name
+ 16       ORDER BY
+ 17           total_spend_amount DESC;
+
+CUSTOMER_ID FIRST_NAME LAST_NAME       TOTAL_SPEND_AMOUNT                                                                                                                                                                                                                                                                                                                                                       
+----------- ---------- --------------- ------------------                                                                                                                                                                                                                                                                                                                                                       
+          1 Harry      Brown                        18000                                                                                                                                                                                                                                                                                                                                                       
+          2 James      Smith                          340                                                                                                                                                                                                                                                                                                                                                       
+
+
+SQL>
+
+SQL> SELECT *
+  2  FROM (
+  3      SELECT
+  4          C.customer_ID,
+  5          C.First_name,
+  6          C.Last_name,
+  7          SUM(O.order_total) AS total_spend_amount
+  8      FROM
+  9          Customer C
+ 10      JOIN
+ 11          Orders O ON C.customer_ID = O.customer_ID
+ 12      WHERE
+ 13          EXTRACT(MONTH FROM O.order_date) = 8
+ 14      GROUP BY
+ 15          C.customer_ID,
+ 16          C.First_name,
+ 17          C.Last_name
+ 18      ORDER BY
+ 19          total_spend_amount DESC
+ 20  )
+ 21  WHERE ROWNUM = 1;
+
+CUSTOMER_ID FIRST_NAME LAST_NAME       TOTAL_SPEND_AMOUNT                                                                                                                                                                                                                                                                                                                                                       
+----------- ---------- --------------- ------------------                                                                                                                                                                                                                                                                                                                                                       
+          1 Harry      Brown                        18000                                                                                                                                                                                                                                                                                                                                                       
+
+SQL> 
+SQL> SPOOL OFF
